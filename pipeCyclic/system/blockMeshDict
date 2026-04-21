@@ -27,25 +27,40 @@ z #calc "$radius*cos($radHalfAngle)";
 
 vertices
 (
-    (0 0 0)
-    (10 0 0)
-    (10 0 0)
-    (0 0 0)
-    (0 #neg $y $z)
-    (10 #neg $y $z)
-    (10 $y $z)
-    (0 $y $z)
+    // segment 1 (unchanged start)
+    (0 0 0)        // 0
+    (5 0 0)        // 1
+    (5 0 0)        // 2
+    (0 0 0)        // 3
+
+    (0 #neg $y $z) // 4
+    (5 #neg $y $z) // 5
+    (5 $y $z)      // 6
+    (0 $y $z)      // 7
+
+    // segment 2 (shifted → creates bend)
+    (10 0.5 0)        // 8
+    (10 0.5 0)        // 9
+
+    (10 #calc "-$y+0.5" $z) // 10
+    (10 #calc "$y+0.5" $z)  // 11
 );
 
 blocks
 (
-    hex (0 1 2 3 4 5 6 7) (50 5 5) simpleGrading (1 1 1)
+    hex (0 1 2 3 4 5 6 7) (25 5 5) simpleGrading (1 1 1)
+
+    hex (1 8 9 2 5 10 11 6) (25 5 5) simpleGrading (1 1 1)
 );
 
 edges
 (
+    // segment 1
     arc 4 7 (0 0 $radius)
-    arc 5 6 (10 0 $radius)
+    arc 5 6 (5 0 $radius)
+
+    // segment 2 (only NEW edge!)
+    arc 10 11 (10 0.5 $radius)
 );
 
 boundary
@@ -64,7 +79,7 @@ boundary
         type patch;
         faces
         (
-            (1 2 6 5)
+            (8 9 11 10)
         );
     }
 
