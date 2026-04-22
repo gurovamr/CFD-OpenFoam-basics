@@ -14,59 +14,26 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-6
+3
 (
     inlet
     {
         type            patch;
-        nFaces          25;
-        startFace       3225;
+        nFaces          580;
+        startFace       61340;
     }
     outlet
     {
         type            patch;
-        nFaces          25;
-        startFace       3250;
-    }
-    side1
-    {
-        type            cyclic;
-        inGroups        List<word> 1(cyclic);
-        nFaces          125;
-        startFace       3275;
-        matchTolerance  0.0001;
-        neighbourPatch  side2;
-        transformType   rotational;
-        rotationAxis    (1 0 0);
-        rotationCentre  (0 9.764831840851019e-08 -2.697335960149709e-14);
-        rotationAngle   89.99996835080775;
-    }
-    side2
-    {
-        type            cyclic;
-        inGroups        List<word> 1(cyclic);
-        nFaces          125;
-        startFace       3400;
-        matchTolerance  0.0001;
-        neighbourPatch  side1;
-        transformType   rotational;
-        rotationAxis    (1 0 0);
-        rotationCentre  (0 9.764831840851019e-08 -2.697335960149709e-14);
-        rotationAngle   -89.99996835080775;
+        nFaces          580;
+        startFace       61920;
     }
     walls
     {
         type            wall;
         inGroups        List<word> 1(wall);
-        nFaces          125;
-        startFace       3525;
-    }
-    defaultFaces
-    {
-        type            empty;
-        inGroups        List<word> 1(empty);
-        nFaces          375;
-        startFace       3650;
+        nFaces          1440;
+        startFace       62500;
     }
 )
 

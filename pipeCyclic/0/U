@@ -16,15 +16,7 @@ FoamFile
 
 dimensions      [0 1 -1 0 0 0 0];
 
-internalField
-{
-    type        coded;
-
-    evaluate
-    #{
-        field = velocity(1, 0, 0) + (C ^ rate(2, 0, 0));
-    #};
-}
+internalField   uniform (0 0 0);
 
 boundaryField
 {
@@ -32,18 +24,14 @@ boundaryField
 
     inlet
     {
-        type           functionalFixedValue;
-
-        value
-        {
-            $internalField;
-        }
+        type            fixedValue;
+        value           uniform (0.25 0 0);
     }
 
     outlet
     {
         type            pressureInletOutletVelocity;
-        value           uniform (1 0 0);
+        value           uniform (0 0 0);
     }
 
     walls
