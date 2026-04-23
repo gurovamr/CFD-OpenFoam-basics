@@ -24,13 +24,7 @@ stopAt          endTime;
 
 endTime         1000;
 
-deltaT          5e-4;
-
-adjustTimeStep  yes;
-
-maxCo           0.5;
-
-maxDeltaT       2e-3;
+deltaT          1;
 
 writeControl    timeStep;
 
