@@ -1,0 +1,67 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volVectorField;
+    location    "0";
+    object      U;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 1 -1 0 0 0 0];   // m/s
+
+// Uniform initial field – all zero.
+internalField   uniform (0 0 0);
+
+boundaryField
+{
+    // -----------------------------------------------------------------------
+    // inlet: bottom cross-section of the short straight cylinder (zMin).
+    // Flow enters in the +z direction (upward through the cylinder) and then
+    // follows the spiral curve via the extruded mesh layers.
+    // Velocity = 0.01 m/s  →  Re ≈ 1515 (laminar).
+    // -----------------------------------------------------------------------
+    inlet
+    {
+        type            fixedValue;
+        value           uniform (0 0 0.01);
+    }
+
+    // -----------------------------------------------------------------------
+    // outlet: the far end of the spiral (last extruded layer).
+    // Pressure outlet – velocity is unconstrained (extrapolated).
+    // -----------------------------------------------------------------------
+    outlet
+    {
+        type            pressureInletOutletVelocity;
+        value           uniform (0 0 0);
+    }
+
+    // -----------------------------------------------------------------------
+    // walls: lateral surface of the entire tortuous pipe (no-slip).
+    // Covers the short straight section (blockMesh) plus the full spiral
+    // surface (extrudeMesh, exposedPatchName = walls).
+    // -----------------------------------------------------------------------
+    walls
+    {
+        type            noSlip;
+    }
+
+    // -----------------------------------------------------------------------
+    // defaultFaces: fallback in case extrudeMesh does not honour
+    // exposedPatchName and puts the spiral wall faces here instead.
+    // If checkMesh shows no 'defaultFaces' patch, remove this block.
+    // -----------------------------------------------------------------------
+    defaultFaces
+    {
+        type            noSlip;
+    }
+}
+
+// ************************************************************************* //

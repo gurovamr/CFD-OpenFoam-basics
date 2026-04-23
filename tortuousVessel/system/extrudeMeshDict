@@ -1,0 +1,45 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      extrudeMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+//
+// Take the blockMesh outlet face and sweep it along the spiral curve.
+// This turns the flat 2-D cross-section into a fully 3-D tortuous pipe.
+//
+
+constructFrom   mesh;       // use the existing blockMesh as layer-0
+sourceCase      ".";        // look in the current case directory
+
+sourcePatches   (outlet);   // extrude FROM the outlet face
+
+flipNormals     false;
+
+mergeFaces      false;      // set true only if you want to close a ring
+
+// Patch name for the LATERAL surface of the extruded pipe.
+// These wall faces are merged with the 'walls' patch that blockMesh created
+// for the short straight section.
+exposedPatchName walls;
+
+extrudeModel
+{
+    type            path;
+
+    nLayers         500;        // number of cross-sections along the curve
+    expansionRatio  1;          // uniform spacing
+
+    path            "constant/geometry/curve.obj";  // spiral centreline
+}
+
+// ************************************************************************* //

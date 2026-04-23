@@ -1,0 +1,46 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      p;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 2 -2 0 0 0 0];   // m²/s²  (kinematic pressure p/rho)
+
+internalField   uniform 0;
+
+boundaryField
+{
+    inlet
+    {
+        type            zeroGradient;   // pressure not fixed at inlet
+    }
+
+    outlet
+    {
+        type            fixedValue;
+        value           uniform 0;     // reference pressure = 0 at outlet
+    }
+
+    walls
+    {
+        type            zeroGradient;
+    }
+
+    // Fallback – remove if 'defaultFaces' patch does not exist after meshing.
+    defaultFaces
+    {
+        type            zeroGradient;
+    }
+}
+
+// ************************************************************************* //

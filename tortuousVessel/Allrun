@@ -1,0 +1,51 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source OpenFOAM run-functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# --------------------------------------------------------------------------
+# STEP 1 – copy the spiral centreline geometry from spiralPipe_clean.
+#          (curve.obj.gz is a binary file committed separately.)
+# --------------------------------------------------------------------------
+mkdir -p constant/geometry
+if [ ! -f constant/geometry/curve.obj ]; then
+    if [ -f constant/geometry/curve.obj.gz ]; then
+        echo "Decompressing curve.obj.gz ..."
+        gunzip -k constant/geometry/curve.obj.gz
+    else
+        echo "ERROR: constant/geometry/curve.obj.gz not found."
+        echo "       Copy it from spiralPipe_clean/constant/geometry/ first."
+        exit 1
+    fi
+fi
+
+# --------------------------------------------------------------------------
+# STEP 2 – generate the circular cross-section mesh (O-grid cylinder).
+# --------------------------------------------------------------------------
+runApplication blockMesh
+
+# --------------------------------------------------------------------------
+# STEP 3 – extrude the outlet face along the spiral curve.
+#          This sweeps the 2-D cross-section through 3-D space to create
+#          the full tortuous pipe mesh.
+# --------------------------------------------------------------------------
+runApplication extrudeMesh
+
+# --------------------------------------------------------------------------
+# STEP 4 – inspect the resulting patches.
+#          Check the output to confirm inlet / outlet / walls names.
+# --------------------------------------------------------------------------
+echo ""
+echo "=== Boundary patches after meshing ==="
+foamDictionary constant/polyMesh/boundary -entry "(.*)" -value 2>/dev/null \
+    || cat constant/polyMesh/boundary
+echo "======================================="
+echo ""
+
+# --------------------------------------------------------------------------
+# STEP 5 – run the laminar SIMPLE solver.
+# --------------------------------------------------------------------------
+runApplication foamRun
+
+#------------------------------------------------------------------------------

@@ -1,0 +1,31 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      physicalProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+//
+// Blood (Newtonian approximation, valid at high shear rates).
+//   Dynamic viscosity  mu  = 3.5e-3 Pa·s
+//   Density            rho = 1060  kg/m³
+//   Kinematic viscosity nu = mu/rho ≈ 3.3e-6 m²/s
+//
+// With the large demonstration geometry (radius = 0.25 m) and inlet
+// velocity 0.01 m/s the Reynolds number is:
+//   Re = U·D/nu = 0.01 * 0.5 / 3.3e-6 ≈ 1515  → laminar ✓
+//
+
+viscosityModel  constant;
+
+nu              [0 2 -1 0 0 0 0]  3.3e-6;   // blood kinematic viscosity
+
+// ************************************************************************* //
